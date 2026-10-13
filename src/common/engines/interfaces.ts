@@ -14,6 +14,8 @@ export interface IMessageRequest {
     commandPrompt: string
     modelOverride?: string
     thinkingBudget?: number
+    // Overrides the model's default reasoning effort where the model supports one
+    reasoningEffort?: 'low' | 'medium' | 'high'
     onMessage: (message: { content: string; role: string; isFullText?: boolean }) => Promise<void>
     onError: (error: string) => void
     onFinished: (reason: string) => void

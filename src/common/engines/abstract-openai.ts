@@ -213,6 +213,9 @@ export abstract class AbstractOpenAI extends AbstractEngine {
         if (!settings.thinkingEnabled && this.supportsReasoningEffortNone(model)) {
             body['reasoning_effort'] = 'none'
         }
+        if (req.reasoningEffort && (body.reasoning_effort !== undefined || this.supportsReasoningEffortNone(model))) {
+            body['reasoning_effort'] = req.reasoningEffort
+        }
         if (useResponsesAPI) {
             if (body.reasoning_effort !== undefined) {
                 body['reasoning'] = {

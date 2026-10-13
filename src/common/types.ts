@@ -156,4 +156,5 @@ export interface ISettings {
     claudeThinking: boolean
     claudeThinkingLevel: 'low' | 'medium' | 'high'
     useCompactLookup?: boolean
+    followUpReasoningEffort?: 'low' | 'medium' | 'high'
 }

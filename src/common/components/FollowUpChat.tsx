@@ -5,7 +5,7 @@ import { RxEnter, RxPaperPlane, RxStop } from 'react-icons/rx'
 import { useTheme } from '../hooks/useTheme'
 import { IThemedStyleProps } from '../types'
 import { isTauri, isMacOS } from '../utils'
-import { followUp, IFollowUpTurn } from '../followup'
+import { followUp, FOLLOW_UP_NOTE_MARKER, IFollowUpTurn } from '../followup'
 import { CopyButton } from './CopyButton'
 
 const useStyles = createUseStyles({
@@ -35,6 +35,13 @@ const useStyles = createUseStyles({
         lineHeight: 1.6,
         whiteSpace: 'pre-wrap',
         color: props.theme.colors.contentPrimary,
+    }),
+    'note': (props: IThemedStyleProps) => ({
+        marginTop: '4px',
+        fontSize: '12px',
+        lineHeight: 1.5,
+        whiteSpace: 'pre-wrap',
+        color: props.theme.colors.contentTertiary,
     }),
     'error': (props: IThemedStyleProps) => ({
         fontSize: '12px',
@@ -87,6 +94,18 @@ const useStyles = createUseStyles({
     },
 })
 
+// Splits an assistant reply into the ready-to-send draft and its Chinese gloss
+function splitReply(content: string): { draft: string; note: string } {
+    const idx = content.indexOf(FOLLOW_UP_NOTE_MARKER)
+    if (idx < 0) {
+        return { draft: content.trim(), note: '' }
+    }
+    return {
+        draft: content.slice(0, idx).trim(),
+        note: content.slice(idx + FOLLOW_UP_NOTE_MARKER.length).trim(),
+    }
+}
+
 export interface IFollowUpChatProps {
     sourceText: string
     translatedText: string
@@ -124,7 +143,7 @@ export function FollowUpChat({
 
     useEffect(() => {
         const lastAssistant = [...turns].reverse().find((turn) => turn.role === 'assistant')
-        onLatestReplyChange?.(lastAssistant?.content ?? '')
+        onLatestReplyChange?.(lastAssistant ? splitReply(lastAssistant.content).draft : '')
     }, [turns, onLatestReplyChange])
 
     // Grow the textarea with its content, up to the CSS max-height
@@ -206,29 +225,19 @@ export function FollowUpChat({
                         {turn.content}
                     </div>
                 ) : (
-                    <div key={i}>
-                        <div className={styles.assistantBlock}>{turn.content}</div>
-                        <div className={styles.buttons}>
-                            {isTauri() && (
-                                <Tooltip
-                                    content={`Insert into previous input${
-                                        i === turns.length - 1 ? (isMacOS ? ' (⇧⌘↩)' : ' (Ctrl+Shift+Enter)') : ''
-                                    }`}
-                                    placement='bottom'
-                                >
-                                    <div className={actionButtonClassName} onClick={() => onInsert(turn.content)}>
-                                        <RxEnter size={15} />
-                                    </div>
-                                </Tooltip>
-                            )}
-                            <CopyButton text={turn.content} styles={{ actionButton: actionButtonClassName }} />
-                        </div>
-                    </div>
+                    <AssistantTurn
+                        key={i}
+                        content={turn.content}
+                        isLatest={i === turns.length - 1}
+                        styles={styles}
+                        actionButtonClassName={actionButtonClassName}
+                        onInsert={onInsert}
+                    />
                 )
             )}
             {isLoading && (
                 <div className={styles.assistantBlock}>
-                    {streamingText}
+                    {splitReply(streamingText).draft}
                     <span className={styles.caret} />
                 </div>
             )}
@@ -256,6 +265,43 @@ export function FollowUpChat({
                         </div>
                     </Tooltip>
                 )}
+            </div>
+        </div>
+    )
+}
+
+function AssistantTurn({
+    content,
+    isLatest,
+    styles,
+    actionButtonClassName,
+    onInsert,
+}: {
+    content: string
+    isLatest: boolean
+    styles: Record<'assistantBlock' | 'note' | 'buttons', string>
+    actionButtonClassName: string
+    onInsert: (text: string) => void
+}) {
+    const { draft, note } = splitReply(content)
+    return (
+        <div>
+            <div className={styles.assistantBlock}>{draft}</div>
+            {note && <div className={styles.note}>{note}</div>}
+            <div className={styles.buttons}>
+                {isTauri() && (
+                    <Tooltip
+                        content={`Insert into previous input${
+                            isLatest ? (isMacOS ? ' (⇧⌘↩)' : ' (Ctrl+Shift+Enter)') : ''
+                        }`}
+                        placement='bottom'
+                    >
+                        <div className={actionButtonClassName} onClick={() => onInsert(draft)}>
+                            <RxEnter size={15} />
+                        </div>
+                    </Tooltip>
+                )}
+                <CopyButton text={draft} styles={{ actionButton: actionButtonClassName }} />
             </div>
         </div>
     )

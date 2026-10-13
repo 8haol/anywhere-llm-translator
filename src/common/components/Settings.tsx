@@ -238,9 +238,10 @@ interface IThinkingLevelSelectorProps {
     value?: string
     onChange?: (value: string) => void
     onBlur?: () => void
+    defaultLevel?: string
 }
 
-function ThinkingLevelSelector({ value, onChange, onBlur }: IThinkingLevelSelectorProps) {
+function ThinkingLevelSelector({ value, onChange, onBlur, defaultLevel = 'medium' }: IThinkingLevelSelectorProps) {
     const { t } = useTranslation()
 
     return (
@@ -249,7 +250,7 @@ function ThinkingLevelSelector({ value, onChange, onBlur }: IThinkingLevelSelect
             onBlur={onBlur}
             searchable={false}
             clearable={false}
-            value={value ? [{ id: value }] : [{ id: 'medium' }]}
+            value={[{ id: value || defaultLevel }]}
             onChange={(params) => {
                 onChange?.(params.value[0]?.id as string)
                 onBlur?.()
@@ -3579,6 +3580,15 @@ export function InnerSettings({
                             )}
                         >
                             <UseCompactLookupCheckbox onBlur={onBlur} />
+                        </FormItem>
+                        <FormItem
+                            name='followUpReasoningEffort'
+                            label={t('Follow-up chat reasoning effort')}
+                            caption={t(
+                                'Reasoning effort for the chat under translation results. Higher is smarter but slower. Translation itself is not affected.'
+                            )}
+                        >
+                            <ThinkingLevelSelector onBlur={onBlur} defaultLevel='low' />
                         </FormItem>
                         <FormItem
                             style={{
