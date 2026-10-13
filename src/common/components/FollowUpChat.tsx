@@ -208,9 +208,25 @@ export function FollowUpChat({
         controllerRef.current?.abort('stop')
     }, [])
 
+    // WebKit fires compositionend *before* the keydown of the Enter that
+    // commits an IME candidate, so isComposing is already false there.
+    // Keep the flag up until the current task finishes to cover that Enter.
+    const isComposingRef = useRef(false)
+    const handleCompositionStart = () => {
+        isComposingRef.current = true
+    }
+    const handleCompositionEnd = () => {
+        setTimeout(() => {
+            isComposingRef.current = false
+        }, 0)
+    }
+
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        // Ignore Enter while an IME (e.g. Chinese pinyin) is composing
-        if (e.key !== 'Enter' || e.shiftKey || e.metaKey || e.ctrlKey || e.nativeEvent.isComposing) {
+        if (e.key !== 'Enter' || e.shiftKey || e.metaKey || e.ctrlKey) {
+            return
+        }
+        // Ignore the Enter that commits an IME (e.g. pinyin) candidate
+        if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229 || isComposingRef.current) {
             return
         }
         e.preventDefault()
@@ -251,6 +267,8 @@ export function FollowUpChat({
                     placeholder='追问，或说你想怎么回复… (Enter 发送，Shift+Enter 换行)'
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
+                    onCompositionStart={handleCompositionStart}
+                    onCompositionEnd={handleCompositionEnd}
                 />
                 {isLoading ? (
                     <Tooltip content='Stop' placement='bottom'>
