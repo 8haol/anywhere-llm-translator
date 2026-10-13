@@ -40,7 +40,7 @@
     "@aptabase/tauri": "^0.4.1",
     "@floating-ui/dom": "^1.5.1",
     "@sentry/react": "^7.61.0",
-    "@tauri-apps/api": "^2.8.0",
+    "@tauri-apps/api": "^2.12.3",
     "@tauri-apps/plugin-autostart": "^2.5.0",
     "@tauri-apps/plugin-fs": "^2.4.2",
     "@tauri-apps/plugin-global-shortcut": "^2.3.0",
