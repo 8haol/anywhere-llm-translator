@@ -1,181 +1,66 @@
-# Due to receiving a trademark ownership warning from OpenAI, this project and product has been renamed to nextai translator. We hope you understand.
+# Anywhere LLM Translator
 
-<p align="center">
-    <br> English | <a href="README-CN.md">中文</a>
-</p>
-<p align="center">
-    <em>The translator that does more than just translation</em>
-</p>
+**LLM translation, polishing and replies — anywhere on your desktop, no copy-paste.**
 
-<p align="center">
-  <a href="LICENSE" target="_blank">
-    <img alt="MIT License" src="https://img.shields.io/github/license/nextai-translator/nextai-translator.svg?style=flat-square" />
-  </a>
+Select text in any app (Teams, Slack, Mail, a browser, a PDF), press a hotkey, and read the translation in a small window. Then keep talking to the LLM right there: ask what a term means, or say in your own words how you want to reply, and get a ready-to-send message written in your voice — with the selected text as context. One more shortcut puts the reply back into the app you came from.
 
-  <!-- TypeScript Badge -->
-  <img alt="TypeScript" src="https://img.shields.io/badge/-TypeScript-blue?style=flat-square&logo=typescript&logoColor=white" />
+No switching to a chat app, no opening a new conversation, no copy-paste round trips.
 
-  <!-- Rust Badge -->
-  <img alt="Rust" src="https://img.shields.io/badge/-Rust-orange?style=flat-square&logo=rust&logoColor=white" />
+> **This project is a modified version of [nextai-translator](https://github.com/nextai-translator/nextai-translator) by [yetone](https://github.com/yetone) and its contributors.**
+> Almost all of the app — the desktop shell, hotkeys, text selection, translation engines and UI — is their work. This fork adds the features listed below. The original README is kept as [README-upstream.md](README-upstream.md).
 
-  <a href="https://chrome.google.com/webstore/detail/nextai-translator/ogjibjphoadhljaoicdnjnmgokohngcc" target="_blank">
-    <img alt="Chrome" src="https://img.shields.io/chrome-web-store/stars/ogjibjphoadhljaoicdnjnmgokohngcc?color=blue&label=Chrome&style=flat-square&logo=google-chrome&logoColor=white" />
-  </a>
+## What this fork adds
 
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/nextai-translator/" target="_blank">
-    <img alt="Firefox" src="https://img.shields.io/amo/stars/nextai-translator?color=orange&label=Firefox&style=flat-square&logo=firefox&logoColor=white" />
-  </a>
+- **Follow-up chat under every translation.** Type below the result (the prompt is currently tuned for Chinese speakers):
+  - Describe what you want to say — `周五没空，下周一二都可以` — and get a first-person reply in the language of the original message, matching its tone (short chat reply, or a full email with greeting and sign-off).
+  - Ask about the text — `SKU rollout 是啥意思` — and get a short answer in Chinese, using the text as context.
+  - Revise the draft — `更正式一点`, `短一点`.
+  - Each draft comes with a one-line Chinese gloss, so you can check the meaning before sending. Only the draft is copied or inserted.
+- **Insert the reply into the previous app** with the button or `⇧⌘↩` (`Ctrl+Shift+Enter` on Windows/Linux).
+- **Separate reasoning effort for the chat** (Settings → General → *Follow-up chat reasoning effort*). Translation stays fast; the chat can think harder. Applies to OpenAI-compatible providers.
+- **Works with Chinese IMEs**: the Enter that commits a pinyin candidate does not send the message.
+- **No telemetry.** The upstream analytics (Aptabase, Sentry, Google Analytics) are switched off.
+- **Runs side by side with the official app.** It has its own app ID, settings folder and local IPC endpoints. On first launch it copies your settings from an installed NextAI Translator, if there is one, without changing them.
 
-  <a href="https://github.com/nextai-translator/nextai-translator/releases" target="_blank">
-    <img alt="macOS" src="https://img.shields.io/badge/-macOS-black?style=flat-square&logo=apple&logoColor=white" />
-  </a>
+## Install
 
-  <a href="https://github.com/nextai-translator/nextai-translator/releases" target="_blank">
-    <img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" />
-  </a>
+### macOS (Apple Silicon)
 
-  <a href="https://github.com/nextai-translator/nextai-translator/releases" target="_blank">
-    <img alt="Linux" src="https://img.shields.io/badge/-Linux-yellow?style=flat-square&logo=linux&logoColor=white" />
-  </a>
-</p>
+1. Download the `.dmg` from the [Releases](https://github.com/8haol/anywhere-llm-translator/releases) page.
+2. Open it and drag **Anywhere LLM Translator** into Applications.
+3. The app is not signed with an Apple Developer ID, so macOS blocks the first launch:
+   1. Click **Done** (or **Cancel**) in the warning.
+   2. Open **System Settings → Privacy & Security**.
+   3. Scroll down and click **Open Anyway** next to the message about Anywhere LLM Translator.
+4. Grant **Accessibility** permission when asked (System Settings → Privacy & Security → Accessibility). The hotkey cannot read selected text without it.
+5. Open Settings from the menu bar icon, choose a provider and enter your own API key.
 
-# Why Yet another Translator
+The app does not update itself. Check the Releases page for new versions.
 
-I have developed a [Bob](https://bobtranslate.com/) [plugin](https://github.com/yetone/bob-plugin-nextai-translator) that utilizes ChatGPT API to provide global word translation on macOS. However, since not all users have access to macOS to benefit from the plugin, I have created this project!
+### Build from source
 
-# More than just a browser extension
+Requirements: Node.js 20+, pnpm 9, Rust (stable), and Xcode Command Line Tools on macOS.
 
-What began as a Chrome extension has now evolved into a multi-platform desktop app that I am currently developing.
-
-<p align="center">
-  <img width="560" src="https://user-images.githubusercontent.com/1206493/223899374-ff386436-63b8-4618-afdd-fed2e6b48d56.png" />
-</p>
-
-# More than just translation
-
-What began as a translation tool has now evolved to include surprisingly effective word polishing and summarization capabilities, ~~accidentally~~.
-
-# How to use
-
-<p align="center">
-  <img width="800" src="https://user-images.githubusercontent.com/1206493/223200182-6a1d2a02-3fe0-4723-bdae-99d8b7212a33.gif" />
-</p>
-
-# Features
-
-1. It offers three modes: translation, polishing and summarization.
-2. Our tool allows for mutual translation, polishing and summarization across 55 different languages.
-3. Streaming mode is supported!
-4. It allows users to customize their translation text.
-5. One-click copying
-6. Text-to-Speech (TTS)
-7. Available on all platforms (Windows, macOS, and Linux) for both browsers and Desktop
-8. Support screenshot translation
-9. Support for vocabulary books, as well as support for generating memory aids based on the words in the vocabulary books
-10. Supports [OpenAI](https://openai.com/), [TeamoRouter](https://teamorouter.com/?utm_source=nextai_translator&utm_medium=referral&utm_campaign=ai_directory), [Azure OpenAI Service](https://azure.microsoft.com/en-us/products/cognitive-services/openai-service), [MiniMax](https://www.minimaxi.com/), and other LLM providers
-
-# Preparation
-
--   (recommended) Use [**TeamoRouter**](https://teamorouter.com/?utm_source=nextai_translator&utm_medium=referral&utm_campaign=ai_directory) — an OpenAI-compatible LLM gateway that gives you OpenAI, Claude, Gemini and more through a single API key, at up to 90% off. It's built in: just select **TeamoRouter** as the provider in Settings and paste your API key.
--   (required) Apply for an OpenAI API key [here](https://platform.openai.com/account/api-keys) or [Azure OpenAI Service API Key](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/chatgpt-quickstart?tabs=command-line&pivots=rest-api#retrieve-key-and-endpoint)
--   (optional) If you cannot access OpenAI, you can use the OpenAI API Proxy.
-
-# Installation
-
-## Windows
-
-### Install Manually
-
-1. Download the installation package ending in `.exe` from the [Latest Release](https://github.com/nextai-translator/nextai-translator/releases/latest) page.
-2. Double click the downloaded file to install it.
-3. If prompted as unsafe, you can click on `More Info` -> `Run Anyway` to proceed with the installation.
-4. Ready to use!
-
-## MacOS
-
-### Install Manually
-
-1. Go to the [Latest Release](https://github.com/nextai-translator/nextai-translator/releases/latest) page and download the corresponding chip's `.dmg` installation package. Note: Use aarch64 version for Apple Silicon machines and run `xattr` command below.
-2. Double click the downloaded file to install it.
-3. Ready to use!
-
-### Troubleshooting
-
--   "NextAI Translator" can’t be opened because the developer cannot be verified.
- 
-    <p align="center">
-      <img width="300" src="https://user-images.githubusercontent.com/1206493/223916804-45ce3f34-6a4a-4baf-a0c1-4ab5c54c521f.png" />
-    </p>
- 
-    -   Click the `Cancel` button, then go to the `Settings` -> `Privacy and Security` page, click the `Still Open` button, and then click the `Open` button in the pop-up window. After that, there will be no more pop-up warnings when opening `NextAI Translator`. 🎉
-        <p align="center">
-          <img width="500" src="https://user-images.githubusercontent.com/1206493/223916970-9c99f15e-cf61-4770-b92d-4a78f980bb26.png" /> <img width="200" src="https://user-images.githubusercontent.com/1206493/223917449-ed1ac19f-c43d-4b13-9888-79ba46ceb862.png" />
-        </p>
- 
-    -   If you cannot find the above options in `Privacy & Security`, or get error prompts such as broken files with Apple Silicon machines. Open `Terminal.app` and enter the following command (you may need to enter a password halfway through), then restart `NextAI Translator`:
-
-        ```sh
-        sudo xattr -d com.apple.quarantine /Applications/NextAI\ Translator.app
-        ```
-
--   If you encounter a permission prompt every time you open it, or if you cannot perform a shortcut translation, please go to `Settings` -> `Privacy & Security` -> `Supporting Features` to remove NextAI Translator, and then re-add NextAI Translator.
-
-    <p align="center">
-      <img width="500" src="https://user-images.githubusercontent.com/1206493/224536148-eec559bf-4d99-48c1-bbd3-2cc105aff084.png" />
-      <img width="600" src="https://user-images.githubusercontent.com/1206493/224536277-4200f58e-8dc0-4c01-a27a-a30d7d8dc69e.gif" />
-    </p>
-
-## Installing Desktop Clip Extensions
-
-For details, see [Desktop Clip Extension](./CLIP-EXTENSIONS.md)
-
-  <p align="center">
-    <img width="600" src="https://user-images.githubusercontent.com/1206493/240355949-8f41d98d-f097-4ce4-a533-af60e1757ca1.gif" />
-  </p>
- 
-## Browser Extension
-
-1. Visit your Browser Extension Store to install this plugin:
-
-   <p align="center">
-     <a target="_blank" href="https://chrome.google.com/webstore/detail/nextai-translator/ogjibjphoadhljaoicdnjnmgokohngcc">
-       <img src="https://img.shields.io/chrome-web-store/v/ogjibjphoadhljaoicdnjnmgokohngcc?label=Chrome%20Web%20Store&style=for-the-badge&color=blue&logo=google-chrome&logoColor=white" />
-     </a>
-     <a target="_blank" href="https://addons.mozilla.org/en-US/firefox/addon/nextai-translator/">
-       <img src="https://img.shields.io/amo/v/nextai-translator?label=Firefox%20Add-on&style=for-the-badge&color=orange&logo=firefox&logoColor=white" />
-     </a>
-   </p>
-
-2. Click on the NextAI Translator icon in the browser plugin list, and enter the obtained API KEY into the configuration interface that pops up from this plugin.
- 
-   <p align="center">
-     <img width="600" src="https://user-images.githubusercontent.com/1206493/222958165-159719b4-28a5-44a4-b700-567786df7f03.png" />
-   </p>
-
-3. Refresh the page in the browser to enjoy the smooth translation experience 🎉!
-
-## Configure Azure OpenAI Service
-
-```ts
-const API_URL = `https://${resourceName}.openai.azure.com`
-const API_URL_PATH = `/openai/deployments/${deployName}/chat/completions?api-version=${apiVersion}`
+```bash
+pnpm install
+pnpm dev-tauri     # run in development mode
+pnpm build-tauri   # build the app bundle
 ```
 
-- resourceName: Your Azure OpenAI Service resource name.
-- deployName: Your Azure OpenAI Service model deploy name, you can change your model here.
-- api-version: 2023-05-15, or newer. (supported api-version can be found at [Azure's official doc](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#completions))
+## Usage
 
-# License
+1. Set a hotkey in **Settings → General → Hotkey**.
+2. Select text in any app and press the hotkey.
+3. Read the translation. Type in the box below it and press **Enter** (**Shift+Enter** for a new line).
+4. Press **⇧⌘↩** to insert the latest reply into the app you came from, or use the copy button.
 
-[LICENSE](./LICENSE)
+## License
 
-# Star History
+[AGPL-3.0](LICENSE), the same license as the upstream project.
 
-<p align="center">
-  <a target="_blank" href="https://star-history.com/#nextai-translator/nextai-translator&Date">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=nextai-translator/nextai-translator&type=Date&theme=dark">
-      <img alt="NebulaGraph Data Intelligence Suite(ngdi)" src="https://api.star-history.com/svg?repos=nextai-translator/nextai-translator&type=Date">
-    </picture>
-  </a>
-</p>
+- Original work: Copyright © yetone and the nextai-translator contributors.
+- Modifications in this repository: Copyright © 2026 8haol.
+
+If you distribute this app, or a modified version of it, you must make the corresponding source code available under the AGPL-3.0. See the [git history](https://github.com/8haol/anywhere-llm-translator/commits) for every change made in this fork.
+
+This project is not affiliated with or endorsed by the nextai-translator project or OpenAI.

@@ -425,7 +425,8 @@ fn main() {
     #[cfg_attr(not(target_os = "macos"), allow(unused_mut))]
     let mut app = tauri::Builder::default()
         .plugin(
-            tauri_plugin_aptabase::Builder::new("A-US-9856842764")
+            // Empty key disables Aptabase; the upstream key reports to the upstream author
+            tauri_plugin_aptabase::Builder::new("")
                 .with_panic_hook(Box::new(|client, info, msg| {
                     let location = info
                         .location()
@@ -510,13 +511,13 @@ fn main() {
             std::thread::spawn(move || {
                 #[cfg(target_os = "windows")]
                 {
-                    let server = Server::http("127.0.0.1:62007").unwrap();
+                    let server = Server::http("127.0.0.1:62017").unwrap();
                     launch_ipc_server(&server);
                 }
                 #[cfg(not(target_os = "windows"))]
                 {
                     use std::path::Path;
-                    let path = Path::new("/tmp/openai-translator.sock");
+                    let path = Path::new("/tmp/anywhere-llm-translator.sock");
                     std::fs::remove_file(path).unwrap_or_default();
                     let server = Server::http_unix(path).unwrap();
                     launch_ipc_server(&server);

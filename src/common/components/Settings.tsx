@@ -2376,7 +2376,7 @@ export function InnerSettings({
                             gap: 6,
                         }}
                     >
-                        NextAI Translator
+                        Anywhere LLM Translator
                         {AppConfig?.version ? (
                             <a
                                 href='https://github.com/nextai-translator/nextai-translator/releases'

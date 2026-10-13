@@ -1,12 +1,10 @@
 import * as Sentry from '@sentry/react'
 import ReactGA from 'react-ga4'
-import { getSettings, isDesktopApp, isUserscript } from './utils'
+import { getSettings, isDesktopApp } from './utils'
 
 export async function setupAnalysis() {
-    if (isUserscript()) {
-        return
-    }
-    doSetupAnalysis()
+    // This fork ships without telemetry: the Sentry DSN and GA ID below belong
+    // to the upstream project, so users' data must not be sent there.
 }
 
 let isAnalysisSetupped = false

@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
-  "productName": "NextAI Translator",
+  "productName": "Anywhere LLM Translator",
   "version": "0.1.0",
-  "identifier": "xyz.yetone.apps.openai-translator",
+  "identifier": "io.github.8haol.anywhere-llm-translator",
   "build": {
     "beforeDevCommand": "pnpm dev-tauri-renderer",
     "devUrl": "http://localhost:3333",
@@ -15,7 +15,7 @@
     },
     "updater": {
       "endpoints": [
-        "https://github.com/nextai-translator/nextai-translator/releases/latest/download/latest.json"
+        "https://github.com/8haol/anywhere-llm-translator/releases/latest/download/latest.json"
       ],
       "active": true,
       "windows": {
@@ -26,7 +26,7 @@
   },
   "bundle": {
     "active": true,
-    "createUpdaterArtifacts": true,
+    "createUpdaterArtifacts": false,
     "linux": {
       "deb": {
         "depends": [

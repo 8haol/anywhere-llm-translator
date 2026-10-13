@@ -369,9 +369,9 @@ pub fn show_webview2_broken_dialog(detail: &str) {
             .collect::<Vec<u16>>()
     };
     let text = encode(&format!(
-        "NextAI Translator cannot start because the Microsoft Edge WebView2 Runtime on this computer is missing or broken.\n\nClick OK to open the WebView2 download page, run the installer as administrator, then start NextAI Translator again.\n\nTechnical detail: {detail}"
+        "Anywhere LLM Translator cannot start because the Microsoft Edge WebView2 Runtime on this computer is missing or broken.\n\nClick OK to open the WebView2 download page, run the installer as administrator, then start Anywhere LLM Translator again.\n\nTechnical detail: {detail}"
     ));
-    let caption = encode("NextAI Translator");
+    let caption = encode("Anywhere LLM Translator");
     let pressed = unsafe {
         MessageBoxW(
             None,
@@ -640,7 +640,7 @@ pub fn get_translator_window(
                 TRANSLATOR_WIN_NAME,
                 tauri::WebviewUrl::App("src/tauri/index.html".into()),
             )
-            .title("NextAI Translator")
+            .title("Anywhere LLM Translator")
             .fullscreen(false)
             .inner_size(620.0, 700.0)
             .min_inner_size(540.0, 600.0)
@@ -738,7 +738,7 @@ pub fn get_action_manager_window() -> tauri::WebviewWindow {
                 ACTION_MANAGER_WIN_NAME,
                 tauri::WebviewUrl::App("src/tauri/index.html".into()),
             )
-            .title("NextAI Translator Action Manager")
+            .title("Anywhere LLM Translator Action Manager")
             .fullscreen(false)
             .inner_size(700.0, 700.0)
             .min_inner_size(660.0, 600.0)
@@ -776,7 +776,7 @@ pub fn get_history_window() -> tauri::WebviewWindow {
                 HISTORY_WIN_NAME,
                 tauri::WebviewUrl::App("src/tauri/index.html".into()),
             )
-            .title("NextAI Translator History")
+            .title("Anywhere LLM Translator History")
             .fullscreen(false)
             .inner_size(760.0, 720.0)
             .min_inner_size(660.0, 600.0)
@@ -812,7 +812,7 @@ pub fn get_settings_window() -> tauri::WebviewWindow {
                 SETTINGS_WIN_NAME,
                 tauri::WebviewUrl::App("src/tauri/index.html".into()),
             )
-            .title("NextAI Translator Settings")
+            .title("Anywhere LLM Translator Settings")
             .fullscreen(false)
             .inner_size(660.0, 800.0)
             .min_inner_size(660.0, 600.0)
@@ -889,7 +889,7 @@ pub fn get_updater_window() -> tauri::WebviewWindow {
                 UPDATER_WIN_NAME,
                 tauri::WebviewUrl::App("src/tauri/index.html".into()),
             )
-            .title("NextAI Translator Updater")
+            .title("Anywhere LLM Translator Updater")
             .fullscreen(false)
             .inner_size(500.0, 500.0)
             .min_inner_size(200.0, 200.0)
@@ -1053,7 +1053,7 @@ pub fn get_screenshot_window() -> tauri::WebviewWindow {
                 SCREENSHOT_WIN_NAME,
                 tauri::WebviewUrl::App("src/tauri/index.html".into()),
             )
-            .title("NextAI Translator Screenshot")
+            .title("Anywhere LLM Translator Screenshot")
             .position(position.x, position.y)
             .visible(false)
             .focused(true);
