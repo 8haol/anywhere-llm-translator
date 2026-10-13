@@ -56,7 +56,7 @@
     "@types/react-window": "^1.8.5",
     "baseui-sd": "^12.2.4",
     "best-effort-json-parser": "^1.0.1",
-    "clsx": "^1.2.1",
+    "clsx": "^2.1.1",
     "color": "^4.2.3",
     "common-tags": "^1.8.2",
     "date-fns": "^2.29.3",
