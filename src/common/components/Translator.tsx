@@ -55,6 +55,7 @@ import { Modal, ModalBody, ModalHeader } from 'baseui-sd/modal'
 import { vocabularyService } from '../services/vocabulary'
 import { Action, VocabularyItem, HistoryItem } from '../internal-services/db'
 import { CopyButton } from './CopyButton'
+import { FollowUpChat } from './FollowUpChat'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { actionService } from '../services/action'
 import { historyService } from '../services/history'
@@ -1959,25 +1960,36 @@ function InnerTranslator(props: IInnerTranslatorProps) {
         setActionStr('Stopped')
     }
 
-    const handleInsertTranslatedText = useCallback(async () => {
-        if (!translatedText || !isTauri()) {
-            return
-        }
-        try {
-            const { commands } = await import('@/tauri/bindings')
-            await commands.insertTranslationIntoPreviousInput(translatedText)
-            toast(t('Inserted into previous input'), {
-                icon: '✅',
-                duration: 2000,
-            })
-        } catch (error) {
-            console.error(error)
-            toast(t('Failed to insert into previous input'), {
-                icon: '⚠️',
-                duration: 3000,
-            })
-        }
-    }, [t, translatedText])
+    // Newest finished reply from the follow-up chat; ⇧⌘↩ inserts it instead of the translation
+    const [latestFollowUpReply, setLatestFollowUpReply] = useState('')
+
+    const insertIntoPreviousInput = useCallback(
+        async (text: string) => {
+            if (!text || !isTauri()) {
+                return
+            }
+            try {
+                const { commands } = await import('@/tauri/bindings')
+                await commands.insertTranslationIntoPreviousInput(text)
+                toast(t('Inserted into previous input'), {
+                    icon: '✅',
+                    duration: 2000,
+                })
+            } catch (error) {
+                console.error(error)
+                toast(t('Failed to insert into previous input'), {
+                    icon: '⚠️',
+                    duration: 3000,
+                })
+            }
+        },
+        [t]
+    )
+
+    const handleInsertTranslatedText = useCallback(
+        () => insertIntoPreviousInput(translatedText),
+        [insertIntoPreviousInput, translatedText]
+    )
 
     const handleOpenWordDetails = useCallback(
         async (word: string) => {
@@ -2007,6 +2019,7 @@ function InnerTranslator(props: IInnerTranslatorProps) {
 
     // Window-level keyboard shortcut for "Insert into previous input"
     // — ⇧⌘↩ on macOS, Ctrl+Shift+Enter elsewhere. Mirrors the toolbar button.
+    // Prefers the newest follow-up chat reply when there is one.
     useEffect(() => {
         if (!isTauri()) {
             return
@@ -2019,18 +2032,19 @@ function InnerTranslator(props: IInnerTranslatorProps) {
             if (e.key !== 'Enter') {
                 return
             }
-            if (!translatedText) {
+            const text = latestFollowUpReply || translatedText
+            if (!text) {
                 return
             }
             e.preventDefault()
             e.stopPropagation()
-            handleInsertTranslatedText()
+            insertIntoPreviousInput(text)
         }
         document.addEventListener('keydown', handler)
         return () => {
             document.removeEventListener('keydown', handler)
         }
-    }, [translatedText, handleInsertTranslatedText])
+    }, [translatedText, latestFollowUpReply, insertIntoPreviousInput])
 
     const [isScrolledToTop, setIsScrolledToTop] = useState(false)
     const [isScrolledToBottom, setIsScrolledToBottom] = useState(false)
@@ -3110,6 +3124,16 @@ function InnerTranslator(props: IInnerTranslatorProps) {
                                                 )}
                                                 <CopyButton text={translatedText} styles={styles}></CopyButton>
                                             </div>
+                                        )}
+                                        {translatedText && !isLoading && !errorMessage && (
+                                            <FollowUpChat
+                                                key={`${activateAction?.id}:${translateDeps.text}`}
+                                                sourceText={translateDeps.text}
+                                                translatedText={translatedText}
+                                                actionButtonClassName={styles.actionButton}
+                                                onInsert={insertIntoPreviousInput}
+                                                onLatestReplyChange={setLatestFollowUpReply}
+                                            />
                                         )}
                                     </div>
                                 )}
